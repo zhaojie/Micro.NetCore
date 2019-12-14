@@ -62,7 +62,7 @@ namespace WebApplication1
             var addresses = features.Get<IServerAddressesFeature>();
 
 
-            app.UseConsul();
+            app.UseConsul("MyService1");
         }
     }
 

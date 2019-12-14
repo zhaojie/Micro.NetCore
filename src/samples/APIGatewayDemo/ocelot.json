@@ -2,13 +2,25 @@
   "ReRoutes": [
     {
       "UseServiceDiscovery": true,
-      "DownstreamPathTemplate": "/{url}",
+      "DownstreamPathTemplate": "/v1/{url}",
       "DownstreamScheme": "http",
-      "ServiceName": "MyService",
+      "ServiceName": "MyService1",
       "LoadBalancerOptions": {
         "Type": "RoundRobin"
       },
-      "UpstreamPathTemplate": "/{url}",
+      "UpstreamPathTemplate": "/v1/{url}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "ReRoutesCaseSensitive": false
+    },
+    {
+      "UseServiceDiscovery": true,
+      "DownstreamPathTemplate": "/v2/{url}",
+      "DownstreamScheme": "http",
+      "ServiceName": "MyService2",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
+      "UpstreamPathTemplate": "/v2/{url}",
       "UpstreamHttpMethod": [ "Get" ],
       "ReRoutesCaseSensitive": false
     }
@@ -18,7 +30,7 @@
       "Host": "localhost",
       "Port": 8500,
       "Type": "PollConsul",
-      "PollingInterval": 100
+      "PollingInterval": 1000
     }
   }
 }

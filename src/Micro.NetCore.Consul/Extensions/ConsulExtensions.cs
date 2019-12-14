@@ -25,7 +25,7 @@ namespace Micro.NetCore.Consul.Extensions
             return services;
         }
 
-        public static IApplicationBuilder UseConsul(this IApplicationBuilder app)
+        public static IApplicationBuilder UseConsul(this IApplicationBuilder app, string serviceName)
         {
             var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
             var logger = app.ApplicationServices.GetRequiredService<ILoggerFactory>().CreateLogger("AppExtensions");
@@ -52,10 +52,11 @@ namespace Micro.NetCore.Consul.Extensions
             {
                 ID = $"MyService-{uri.Host}-{uri.Port}",
                 // servie name  
-                Name = "MyService",
+                Name = serviceName,
                 Address = $"{uri.Host}",
                 Port = uri.Port,
-                Check = httpCheck
+                Check = httpCheck,
+                 
             };
 
             logger.LogInformation("Registering with Consul");

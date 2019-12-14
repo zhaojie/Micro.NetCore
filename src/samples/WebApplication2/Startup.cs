@@ -52,7 +52,7 @@ namespace WebApplication2
                 endpoints.MapControllers();
             });
 
-            app.UseConsul();
+            app.UseConsul("MyService2");
         }
     }
 }
