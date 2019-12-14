@@ -20,6 +20,7 @@ namespace WebApplication1
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseUrls("http://localhost:9999");
                     webBuilder.UseStartup<Startup>();
                 });
     }
