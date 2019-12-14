@@ -40,13 +40,22 @@ namespace Micro.NetCore.Consul.Extensions
             Console.WriteLine($"address={address}");
 
             var uri = new Uri(address);
+
+            AgentServiceCheck httpCheck = new AgentServiceCheck()
+            {
+                DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1),
+                Interval = TimeSpan.FromSeconds(30),
+                HTTP = $"http://{uri.Host}:{uri.Port}/health"
+            };
+
             var registration = new AgentServiceRegistration()
             {
                 ID = $"MyService-{uri.Host}-{uri.Port}",
                 // servie name  
                 Name = "MyService",
                 Address = $"{uri.Host}",
-                Port = uri.Port
+                Port = uri.Port,
+                Check = httpCheck
             };
 
             logger.LogInformation("Registering with Consul");

@@ -31,6 +31,8 @@ namespace WebApplication1
         {
             services.AddConsulConfig(Configuration);
 
+            services.AddHealthChecks();
+
             services.AddControllers();
 
         }
@@ -43,7 +45,7 @@ namespace WebApplication1
                 app.UseDeveloperExceptionPage();
             }
 
-            
+            app.UseHealthChecks("/health");
 
             app.UseRouting();
 

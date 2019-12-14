@@ -28,6 +28,8 @@ namespace WebApplication2
 
             services.AddConsulConfig(Configuration);
 
+            services.AddHealthChecks();
+
             services.AddControllers();
         }
 
@@ -38,6 +40,8 @@ namespace WebApplication2
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseHealthChecks("/health");
 
             app.UseRouting();
 
