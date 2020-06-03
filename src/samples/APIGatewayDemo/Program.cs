@@ -10,12 +10,13 @@ using Microsoft.Extensions.Logging;
 using Ocelot.Middleware;
 using Ocelot.Provider.Consul;
 using Ocelot.DependencyInjection;
+using Ocelot;
 using App.Metrics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using App.Metrics.Formatters.InfluxDB;
 using App.Metrics.Filtering;
-
+using Ocelot.Administration;
 namespace APIGatewayDemo
 {
     public class Program
@@ -26,14 +27,18 @@ namespace APIGatewayDemo
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-             .UseUrls("http://*:9000")
+            WebHost.CreateDefaultBuilder(args) 
+             .UseUrls("http://*:9000") 
              .ConfigureAppConfiguration((hostingContext, config) =>
              {
                  config
                      .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
                      .AddJsonFile("ocelot.json")
                      .AddEnvironmentVariables();
+             })
+             .ConfigureLogging((hostingContext, logging) =>
+             {
+                 logging.AddConsole();
              })
             .ConfigureServices(services =>
             {
@@ -59,13 +64,21 @@ namespace APIGatewayDemo
                     options.FlushInterval = TimeSpan.FromSeconds(20);
 
                 }).Build();
+                services.AddMvc(option =>
+                {
 
+                    option.EnableEndpointRouting = false;
+                });
                 services.AddMetrics(metrics);
                 services.AddMetricsReportingHostedService();
                 services.AddMetricsTrackingMiddleware();
                 services.AddMetricsEndpoints();
 
-                services.AddMetrics().AddOcelot().AddConsul();
+                services
+                    .AddMetrics()
+                    .AddOcelot()
+                    .AddConsul()
+                    .AddAdministration("/admin", "secret");
             })
             .Configure(app =>
             {
